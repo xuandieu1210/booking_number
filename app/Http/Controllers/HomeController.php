@@ -53,6 +53,9 @@ class HomeController extends Controller
     {
         $curent_date = date('Y-m-d');
         $date = $this->getCheckDate();
+        if ($date->current_get == 0 || $date->current_get <= $date->current_serve) {
+            return 0;
+        }
         // $date->current_get = ++ $date->current_get ;
         $date->current_serve ++ ;
         $date->current_date = $curent_date ;
@@ -60,6 +63,7 @@ class HomeController extends Controller
         $date->save();
 
         $newNumber =  CurrentStatus::latest('updated_at')->first();
+
         $endpoint =  env('NODE_URL')."call";
         $client = new Client();
 
@@ -78,6 +82,10 @@ class HomeController extends Controller
     public function repeatNumber()
     {
         $newNumber =  CurrentStatus::latest('updated_at')->first();
+        if ($newNumber->current_get == 0 || $newNumber->current_get < $newNumber->current_serve) {
+            return 0;
+        }
+
         $endpoint =  env('NODE_URL')."call"; 
         $client = new Client();
 
