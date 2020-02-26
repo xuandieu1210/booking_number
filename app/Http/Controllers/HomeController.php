@@ -35,10 +35,10 @@ class HomeController extends Controller
         $newNumber =  CurrentStatus::latest('updated_at')->first();
         $endpoint = env('NODE_URL')."print";
         $client = new Client();
-
+        //dd($newNumber);
         $response = $client->request('GET', $endpoint, ['query' => [
-            'current' => $newNumber->current_serve,
-            'number' => $newNumber->current_get, 
+            'current' => str_pad($newNumber->current_serve, 3, '0', STR_PAD_LEFT),
+            'number' => str_pad($newNumber->current_get, 3, '0', STR_PAD_LEFT),
         ]]);
 
 
@@ -71,7 +71,7 @@ class HomeController extends Controller
         $client = new Client();
 
         $response = $client->request('GET', $endpoint, ['query' => [
-                'number' => $newNumber->current_serve, 
+                'number' => str_pad($newNumber->current_serve, 3, '0', STR_PAD_LEFT),
         ]]);
 
         return $newNumber;
@@ -85,7 +85,7 @@ class HomeController extends Controller
     public function repeatNumber()
     {
         $newNumber = $this->getCheckDate();
-        //$newNumber =  CurrentStatus::latest('updated_at')->first();
+        // $newNumber =  CurrentStatus::latest('updated_at')->first();
         if ($newNumber->current_get < $newNumber->current_serve) {
             return 0;
         }
@@ -94,7 +94,7 @@ class HomeController extends Controller
         $client = new Client();
 
         $response = $client->request('GET', $endpoint, ['query' => [
-                'number' => $newNumber->current_serve, 
+                'number' => str_pad($newNumber->current_serve, 3, '0', STR_PAD_LEFT),
         ]]);
 
         return $this->getCheckDate();
